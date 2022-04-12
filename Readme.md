@@ -1,4 +1,4 @@
-content://0@com.sec.android.app.sbrowser.FileProvider/images/share-images/copyImage.png![image](https://user-images.githubusercontent.com/84484398/162875161-371cb6bc-27d2-4930-946c-6ccbb80604a6.png)
+![icon](https://user-images.githubusercontent.com/84484398/162875161-371cb6bc-27d2-4930-946c-6ccbb80604a6.png)
 
 
 This is a simple HTML5 game where you play as the easter bunny but in this game instead of hiding eggs, you find them, there are 50 eggs that are hidden in the scene,
