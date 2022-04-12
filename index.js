@@ -23,6 +23,7 @@ class InstructionScene extends Phaser.Scene {
     this.load.audio('bgMusic', './assets/Fluffing-a-Duck.mp3');
     this.load.image('item1', './assets/easterEgg.png');
     this.load.image('bgImg', './assets/Background Gray.png.png');
+    this.load.image('menue','./assets/panel_brown.png')
   }
   create() {
     let musicConfig = {
@@ -39,28 +40,29 @@ class InstructionScene extends Phaser.Scene {
     let txtConfig = {
       fontFamily: 'Times New Roman',
       fontSize: '32px',
-      fill: '#ffff',
+      color:'#ffccff',
       fontStyle: 'bold',
       stroke: '#ff00ff',
       strokeThickness: 2
     }
-    this.add.text(180, 100, `Welcome to the Egg Hunt.
+    this.add.text(100, 100, `Welcome to the Egg Hunt.
     Get out of the cave`, txtConfig).setOrigin(0);
 
-    this.add.text(0, 200, `Aim: Your goal this time is to gatherall 50 eggs.
-      The egg looks as below but smaller.
-      Use the virtual joystick to move`, txtConfig).setOrigin(0);
-    this.add.image(250, 280, 'item1').setScale(0.5).setOrigin(0);
+this.add.text(0, 200, `Aim: Your goal this time is to
+gatherall 50 eggs.
+The egg looks as      but smaller.
+Use the virtual joystick to move`, txtConfig).setOrigin(0);
+    this.add.image(243, 260, 'item1').setScale(0.3).setOrigin(0);
 
     this.add.text(0, 400, `WARNING: 
-        Watch out for the countdown,
-        once you fail to gather all eggs 
-        in time,you lose.`, {
+Watch out for the countdown,
+once you fail to gather all eggs 
+in time,you lose.`, {
       fontFamily: 'Times New Roman',
       fontSize: '32px',
-      fill: '#ffff',
+      fill: '#ffcccc',
       fontStyle: 'bold',
-      stroke: '#ff0000',
+      stroke: '#ff4d4d',
       strokeThickness: 2
     }).setOrigin(0);
     this.time.addEvent({
@@ -69,7 +71,7 @@ class InstructionScene extends Phaser.Scene {
         this.add.text(150, 0, "Click to Start!", {
           fontFamily: 'Times New Roman',
           fontStyle: 'bold',
-          colour: '#ff0000',
+          stroke: '#ff0000',
           fontSize: '64px'
         });
       }
@@ -77,6 +79,22 @@ class InstructionScene extends Phaser.Scene {
     this.input.on('pointerdown', () => {
       this.scene.start('mainScene');
     })
+    let creditsPallet = this.add.image(530,100,'menue').setOrigin(0).setScale(2.7,5);
+    let creditsTitle = this.add.text(creditsPallet.x*1.06,creditsPallet.y*1.4,'Credits',{color:'#00ff40',fontSize:'38px',fontStyle:'bold'}).setOrigin(0);
+    let credits = this.add.text(creditsPallet.x*1.02,creditsPallet.y*1.8,`Developer:
+    John Delvin
+    
+Music: 
+    kenney
+    
+Game Engine: 
+    phaser
+    
+Eggs backgrounds: 
+    Onocentaur
+    
+Bunny sprite:
+  John Delvin`,{fontStyle:'bold',fontSize: '25px',color:'#000000'}).setOrigin(0);
   }
 }
 class MainScene extends Phaser.Scene {
@@ -105,9 +123,13 @@ class MainScene extends Phaser.Scene {
     //add the map visually
     let tiles = map.addTilesetImage('[Base]BaseChip_pipo', 'tileset'); //The first param is the name of the tileset in Nottiled and the second one is the key used when loading in the asset
     let layer1 = map.createLayer('Layer 1', tiles, 0, 0).setScale(3).setOrigin(0, 0);
+    let layer2 = map.createLayer('Layer 2', tiles, 0, 0).setScale(3).setOrigin(0, 0);
+
+    let layer5 = map.createLayer('Layer 5', tiles, 0, 0).setScale(3).setOrigin(0, 0);
     let layer4 = map.createLayer('Layer 4', tiles, 0, 0).setScale(5).setOrigin(0, 0);
     let eggs = this.physics.add.group();
-    let layer2 = map.createLayer('Layer 2', tiles, 0, 0).setScale(3).setOrigin(0, 0);
+
+
 
     for (var i = 0; i < this.eggCount; i++) {
       let x = Phaser.Math.Between(500, 3700);
@@ -117,9 +139,9 @@ class MainScene extends Phaser.Scene {
       let body = egg.body;
       body.updateFromGameObject();
     }
-
     this.player = this.physics.add.sprite(50, 10, 'bunny').setScale(2);
     let layer3 = map.createLayer('Layer 3', tiles, 0, 0).setScale(5).setOrigin(0, 0);
+
     layer4.setCollisionBetween(137, 138, true);
     layer3.setCollisionBetween(137, 138, true);
 
@@ -138,7 +160,7 @@ class MainScene extends Phaser.Scene {
     this.anims.create({
       key: 'left',
       frames: this.anims.generateFrameNumbers('bunny', { frames: [9, 11] }),
-      frameRate: 8,
+      frameRate: 6,
       repeat: -1
     });
     // this.player.play('left');
@@ -146,7 +168,7 @@ class MainScene extends Phaser.Scene {
     this.anims.create({
       key: 'right',
       frames: this.anims.generateFrameNumbers('bunny', { frames: [3, 5] }),
-      frameRate: 8,
+      frameRate: 6,
       repeat: -1
     });
     // this.player.play('right');
@@ -154,7 +176,7 @@ class MainScene extends Phaser.Scene {
     this.anims.create({
       key: 'up',
       frames: this.anims.generateFrameNumbers('bunny', { frames: [0, 2] }),
-      frameRate: 5,
+      frameRate: 6,
       repeat: -1
     });
     // this.player.play('up');
@@ -162,7 +184,7 @@ class MainScene extends Phaser.Scene {
     this.anims.create({
       key: 'down',
       frames: this.anims.generateFrameNumbers('bunny', { frames: [6, 8] }),
-      frameRate: 5,
+      frameRate: 6,
       repeat: -1
     })
 
@@ -178,10 +200,11 @@ class MainScene extends Phaser.Scene {
       .on('update', this.dumpJoyStickState, this);
     this.joyStick.setScrollFactor(0);
     this.cursorKeys = this.joyStick.createCursorKeys();
+    this.keyBoard = this.input.keyboard.createCursorKeys();
     this.dumpJoyStickState();
-    this.cameras.main.setBounds(0, 0, 3800, 2850);
+    this.cameras.main.setBounds(0, 0, 3840, 2850);
     this.cameras.main.startFollow(this.player);
-    this.physics.world.setBounds(0, 0, 3800, 2860)
+    this.physics.world.setBounds(0, -20, 3870, 2900)
 
     this.player.setCollideWorldBounds(true)
     // scene.physics.world.setBoundsCollision(left, right, up, down);
@@ -191,7 +214,7 @@ class MainScene extends Phaser.Scene {
     let txtConfig = {
       fontFamily: 'Times New Roman',
       fontSize: '32px',
-      fill: '#ffff',
+      fill: '#ffccff',
       fontStyle: 'bold',
       stroke: '#ff00ff',
       strokeThickness: 2
@@ -246,21 +269,22 @@ class MainScene extends Phaser.Scene {
     }
     else {
       this.player.setVelocity(0);
-      if (this.cursorKeys.up.isDown) {
+      if (this.cursorKeys.up.isDown || this.keyBoard.up.isDown) {
         this.player.setVelocityY(-300);
         this.player.anims.play('up', true);
+        console.log('up key');
       }
-      else if (this.cursorKeys.down.isDown) {
+      else if (this.cursorKeys.down.isDown || this.keyBoard.down.isDown ) {
         this.player.setVelocityY(300);
         this.player.anims.play('down', true);
         // console.log(this.player.y);
 
       }
-      else if (this.cursorKeys.left.isDown) {
+      else if (this.cursorKeys.left.isDown || this.keyBoard.left.isDown) {
         this.player.setVelocityX(-300);
         this.player.anims.play('left', true);
       }
-      else if (this.cursorKeys.right.isDown) {
+      else if (this.cursorKeys.right.isDown || this.keyBoard.right.isDown) {
         this.player.setVelocityX(300);
         this.player.anims.play('right', true);
       }
